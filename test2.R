@@ -40,9 +40,10 @@ if(numberofbands==1){
   y2<- c(rep(3, numberofcatsband1))
 }else if(numberofbands==2){
   x1<- c(seq(0, 10/6 * pi, NCB1*pi/3), seq(0, 10/6 * pi, NCB2*pi/3))
-  y1<- c(rep(1, numberofcatsband1), rep(3, numberofcatsband1))
+  y1<- c(rep(1, numberofcatsband1), rep(3, numberofcatsband2))
   x2<- c(seq(0, 10/6 * pi, NCB1*pi/3) + NCB1*pi/3, seq(0, 10/6 * pi, NCB2*pi/3) + NCB2*pi/3)
-  y2<- c(rep(3, numberofcatsband1), rep(5, numberofcatsband1))
+  y2<- c(rep(3, numberofcatsband1), rep(5, numberofcatsband2))
+  
 }else if(numberofbands==3){
   x1<- c(seq(0, 10/6 * pi, NCB1*pi/3), seq(0, 10/6 * pi, NCB2*pi/3), seq(0, 10/6 * pi, NCB3*pi/3))
   y1<- c(rep(1, numberofcatsband1), rep(3, numberofcatsband2), rep(5, numberofcatsband3))
@@ -62,7 +63,7 @@ if(numberofbands==1){
 
 df<-createdonuts(3, 6, 6, 6)
 df<-createdonuts(3, 6, 4, 3)
-df<-createdonuts(3, 4, 6, 3)
+df<-createdonuts(2, 4, 6, 3)
 
 # polar plotter
 polarplotter<-function(df, ...){
