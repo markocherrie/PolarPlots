@@ -1,4 +1,4 @@
-install.packages('geomtextpath')
+#install.packages('geomtextpath')
 
 browsers<-structure(list(browser = structure(c(3L, 3L, 3L, 3L, 2L, 2L, 
                                                2L, 1L, 5L, 5L, 4L), .Label = c("Chrome", "Firefox", "MSIE", 
