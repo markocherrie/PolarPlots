@@ -63,7 +63,7 @@ if(numberofbands==1){
 
 df<-createdonuts(3, 6, 6, 6)
 df<-createdonuts(3, 6, 4, 3)
-df<-createdonuts(2, 4, 6, 3)
+df<-createdonuts(2, 4, 4, 3)
 
 # polar plotter
 polarplotter<-function(df, ...){
@@ -81,13 +81,11 @@ p <- ggplot(df, aes(x1, y1)) +
   geom_rect(aes(xmin = x1, xmax = x2, ymin = y1, ymax = y2, fill = group,
                 alpha = alpha),
             color = "white", size = 2) +
-  #geom_textpath(data = data.frame(x1 = seq(0, 2 * pi, 
-   #                                        length = 300),
-    #                              y1 = rep(1.5, 300),
-     #                             label = rep(c(labels), 
-      #                                        each = (300/nrow(df)))),
-       #         aes(label = label), linetype = 0, size = 4.6, color = "white",
-        #        upright = TRUE) +
+  geom_textpath(data = data.frame(x1 = seq(0, 2 * pi, length = 300),
+                                  y1 = rep(1.5, 300),
+                                  label = rep(c(labels), each = (300/nrow(df)))),
+                aes(label = label), linetype = 0, size = 4.6, color = "white",
+                upright = TRUE) +
   scale_y_continuous(limits = c(-5, 10)) +
   scale_x_continuous(limits = c(0, 2*pi)) +
   scale_fill_manual(values = c("deepskyblue3", "deepskyblue4",
