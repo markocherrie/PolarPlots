@@ -63,7 +63,7 @@ if(numberofbands==1){
 
 df<-createdonuts(3, 6, 6, 6)
 df<-createdonuts(3, 6, 4, 3)
-df<-createdonuts(2, 4, 4, 3)
+df<-createdonuts(2, 6, 4, 3)
 
 # polar plotter
 polarplotter<-function(df, ...){
@@ -74,17 +74,58 @@ polarplotter<-function(df, ...){
   print(labels)
   
   # get the right labels for the right donut
+  lbs<-rep(c(labels), each = round(300/nrow(df)))
   
+  # to get 300 
+  if(length(lbs) != 300){
+    diff<- 300-length(lbs)
+    if(diff<0){
+      lbs<-lbs[-c(1:30)]
+    }else{
+      lbsadd<-rep(c(labels[length(labels)]), each = diff)
+      lbs<-c(lbs, lbsadd)
+    }
+  }
   
+  # get
+  if(length(unique(df$y1))>1){
+    
+  y1a<-rep(2, length(lbs[lbs %in% labels[1:table(df$y1)[1]]]))
+  
+  x1a<-seq(0,2 * pi, length = length(y1a))
+  
+  y1b<-rep(4, length(lbs[
+                            lbs %in% labels[
+                                        (table(df$y1)[1]+1):
+                                           (table(df$y1)[1]+table(df$y1)[2])
+                         ]]))
+  
+  x1b<-seq(0,2 * pi, length = length(y1b))
+  x1<-c(x1a, x1b)
+  y1<-c(y1a,y1b)
+  textdf<-data.frame(x1 = x1,
+             y1 = y1,
+             label = lbs)
+  
+  }else{
+    x1<-seq(0,2 * pi, length = length(y1b))
+    y1 = rep(2, 300)
+    textdf<-data.frame(x1 = x1,
+                       y1 = y1,
+                       label = lbs)
+    
+  }
+
   # plot
 p <- ggplot(df, aes(x1, y1)) +
   geom_rect(aes(xmin = x1, xmax = x2, ymin = y1, ymax = y2, fill = group,
                 alpha = alpha),
             color = "white", size = 2) +
-  geom_textpath(data = data.frame(x1 = seq(0, 2 * pi, length = 300),
-                                  y1 = rep(1.5, 300),
-                                  label = rep(c(labels), each = (300/nrow(df)))),
-                aes(label = label), linetype = 0, size = 4.6, color = "white",
+  geom_textpath(data = textdf,
+                aes(label = label), 
+                linetype = 0, 
+                size = 4.6, 
+                color = "white",
                 upright = TRUE) +
   scale_y_continuous(limits = c(-5, 10)) +
   scale_x_continuous(limits = c(0, 2*pi)) +
@@ -98,4 +139,27 @@ p
 p + coord_polar()
 }
 
-polarplotter(df, c("d", "s", "e", "r"))
+
+
+# testing
+text11<-c("a", "s", "e", "r", "y", "g", "p","i", "ew", "qq", "ii")
+text10<-c("a", "s", "e", "r", "y", "g", "p", "i", "ew", "qq")
+text9<-c("a", "s", "e", "r", "y", "g", "p", "i", "ew")
+
+df<-createdonuts(2, 6, 4, 3)
+polarplotter(df,text10)
+
+
+df<-createdonuts(2, 6, 3, 3)
+polarplotter(df, text9)
+
+
+df<-createdonuts(2, 6, 5, 3)
+polarplotter(df, text11)
+
+
+df<-createdonuts(2, 3, 6, 3)
+polarplotter(df,text9)
+
+
+
