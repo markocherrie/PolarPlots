@@ -1,94 +1,146 @@
 library(ggplot2)
 library(geomtextpath)
+library(RColorBrewer)
 
-# create the donut dataframe
-createdonuts<-function(numberofbands, numberofcatsband1, numberofcatsband2, numberofcatsband3){
-  if(numberofcatsband1==3){
+
+# create the  dataframe
+createdf<-function(numberofbands, ...){
+  
+  numberofcatsband <- unlist(list(...))
+  
+
+
+# make the bands
+if(numberofbands==1){
+  
+  if(numberofcatsband[1]==2){
+    NCB1=3
+  }else if(numberofcatsband[1]==3){
     NCB1=2
-  }else if(numberofcatsband1==4){
+  }else if(numberofcatsband[1]==4){
     NCB1=1.5
-  } else if(numberofcatsband1==5){
+  } else if(numberofcatsband[1]==5){
     NCB1=1.2
-  } else if(numberofcatsband1==6){
+  } else if(numberofcatsband[1]==6){
     NCB1=1
   }
   
-  if(numberofcatsband2==3){
+  
+  x1<- c(seq(0, 10/6 * pi, NCB1*pi/3))
+  y1<- c(rep(1, numberofcatsband[1]))
+  x2<- c(seq(0, 10/6 * pi, NCB1*pi/3) + NCB1*pi/3)
+  y2<- c(rep(3, numberofcatsband[1]))
+
+}else if(numberofbands==2){
+  
+  
+  if(numberofcatsband[1]==2){
+    NCB1=3
+  }else if(numberofcatsband[1]==3){
+    NCB1=2
+  }else if(numberofcatsband[1]==4){
+    NCB1=1.5
+  } else if(numberofcatsband[1]==5){
+    NCB1=1.2
+  } else if(numberofcatsband[1]==6){
+    NCB1=1
+  }
+  
+  
+  if(numberofcatsband[2]==2){
+    NCB2=3
+  }else if(numberofcatsband[2]==3){
     NCB2=2
-  } else if(numberofcatsband2==4){
+  } else if(numberofcatsband[2]==4){
     NCB2=1.5
-  } else if(numberofcatsband2==5){
+  } else if(numberofcatsband[2]==5){
     NCB2=1.2
-  } else if(numberofcatsband2==6){
+  } else if(numberofcatsband[2]==6){
     NCB2=1
   }
   
-  if(numberofcatsband3==3){
-    NCB3=2
-  } else if(numberofcatsband3==4){
-    NCB3=1.5
-  } else if(numberofcatsband3==5){
-    NCB3=1.2
-  } else if(numberofcatsband3==6){
-    NCB3=1
-  }
-
-if(numberofbands==1){
-  x1<- c(seq(0, 10/6 * pi, NCB1*pi/3))
-  y1<- c(rep(1, numberofcatsband1))
-  x2<- c(seq(0, 10/6 * pi, NCB1*pi/3) + NCB1*pi/3)
-  y2<- c(rep(3, numberofcatsband1))
-}else if(numberofbands==2){
   x1<- c(seq(0, 10/6 * pi, NCB1*pi/3), seq(0, 10/6 * pi, NCB2*pi/3))
-  y1<- c(rep(1, numberofcatsband1), rep(3, numberofcatsband2))
+  y1<- c(rep(1, numberofcatsband[1]), rep(3, numberofcatsband[2]))
   x2<- c(seq(0, 10/6 * pi, NCB1*pi/3) + NCB1*pi/3, seq(0, 10/6 * pi, NCB2*pi/3) + NCB2*pi/3)
-  y2<- c(rep(3, numberofcatsband1), rep(5, numberofcatsband2))
+  y2<- c(rep(3, numberofcatsband[1]), rep(5, numberofcatsband[2]))
   
 }else if(numberofbands==3){
+  
+  
+  if(numberofcatsband[1]==2){
+    NCB1=3
+  }else if(numberofcatsband[1]==3){
+    NCB1=2
+  }else if(numberofcatsband[1]==4){
+    NCB1=1.5
+  } else if(numberofcatsband[1]==5){
+    NCB1=1.2
+  } else if(numberofcatsband[1]==6){
+    NCB1=1
+  }
+  
+  
+  if(numberofcatsband[2]==2){
+    NCB2=3
+  }else if(numberofcatsband[2]==3){
+    NCB2=2
+  } else if(numberofcatsband[2]==4){
+    NCB2=1.5
+  } else if(numberofcatsband[2]==5){
+    NCB2=1.2
+  } else if(numberofcatsband[2]==6){
+    NCB2=1
+  }
+  
+  
+  if(numberofcatsband[3]==2){
+    NCB3=3
+  } else if(numberofcatsband[3]==3){
+    NCB3=2
+  } else if(numberofcatsband[3]==4){
+    NCB3=1.5
+  } else if(numberofcatsband[3]==5){
+    NCB3=1.2
+  } else if(numberofcatsband[3]==6){
+    NCB3=1
+  }
+  
   x1<- c(seq(0, 10/6 * pi, NCB1*pi/3), seq(0, 10/6 * pi, NCB2*pi/3), seq(0, 10/6 * pi, NCB3*pi/3))
-  y1<- c(rep(1, numberofcatsband1), rep(3, numberofcatsband2), rep(5, numberofcatsband3))
+  y1<- c(rep(1, numberofcatsband[1]), rep(3, numberofcatsband[2]), rep(5, numberofcatsband[3]))
   x2<- c(seq(0, 10/6 * pi, NCB1*pi/3) + NCB1*pi/3, seq(0, 10/6 * pi, NCB2*pi/3) + NCB2*pi/3, seq(0, 10/6 * pi, NCB3*pi/3) + NCB3*pi/3)
-  y2<- c(rep(3, numberofcatsband1), rep(5, numberofcatsband2), rep(7, numberofcatsband3))
+  y2<- c(rep(3, numberofcatsband[1]), rep(5, numberofcatsband[2]), rep(7, numberofcatsband[3]))
 
 }
   
   # group and alpha - for colours 
   # add labels here too
-  group<-letters[c(1)]
-  alpha<-1
+  n <- length(x1)
+  group<-letters[c(1:n)]
+  alpha<-0.9
 
   df<-data.frame(x1,x2,y1,y2, group, alpha)
   df
 }
 
-df<-createdonuts(3, 6, 6, 6)
-df<-createdonuts(3, 6, 4, 3)
-df<-createdonuts(2, 6, 4, 3)
-
 # polar plotter
-polarplotter<-function(df, ...){
+polarplotter<-function(df, shape, ...){
 
   # get the labels
   labels <- unlist(list(...))
-  labels
-  print(labels)
+  #labels
+  #print(labels)
   
-  # get the right labels for the right donut
-  lbs<-rep(c(labels), each = round(300/nrow(df)))
-  
-  # to get 300 
-  if(length(lbs) != 300){
-    diff<- 300-length(lbs)
-    if(diff<0){
-      lbs<-lbs[-c(1:30)]
-    }else{
-      lbsadd<-rep(c(labels[length(labels)]), each = diff)
-      lbs<-c(lbs, lbsadd)
-    }
+  i<-300
+  while(i %% nrow(df) != 0 ){
+    i = i+1
   }
   
+  
+  # get the right labels for the right donut
+  lbs<-rep(c(labels), each = round(i/nrow(df)))
+  
   # get
-  if(length(unique(df$y1))>1){
+  if(length(unique(df$y1))==2){
     
   y1a<-rep(2, length(lbs[lbs %in% labels[1:table(df$y1)[1]]]))
   
@@ -106,15 +158,58 @@ polarplotter<-function(df, ...){
   textdf<-data.frame(x1 = x1,
              y1 = y1,
              label = lbs)
+  }else if(length(unique(df$y1))==3){
+    
+    y1a<-rep(2, length(lbs[lbs %in% labels[1:table(df$y1)[1]]]))
+    
+    x1a<-seq(0,2 * pi, length = length(y1a))
+    
+    y1b<-rep(4, length(lbs[
+      lbs %in% labels[
+        (table(df$y1)[1]+1):
+          (table(df$y1)[1]+table(df$y1)[2])
+      ]]))
+    
   
+    x1b<-seq(0,2 * pi, length = length(y1b))
+    
+    
+    y1c<-rep(6, length(lbs[
+      lbs %in% labels[
+        (table(df$y1)[1]+table(df$y1)[2]+1):
+          (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3])
+      ]]))
+    
+    
+    x1c<-seq(0,2 * pi, length = length(y1c))
+    
+    
+    x1<-c(x1a, x1b, x1c)
+    y1<-c(y1a,y1b, y1c)
+    textdf<-data.frame(x1 = x1,
+                       y1 = y1,
+                       label = lbs)
+    
+    
   }else{
-    x1<-seq(0,2 * pi, length = length(y1b))
-    y1 = rep(2, 300)
+    x1<-seq(0, 2 * pi, length = 308)
+    y1 = rep(2, 308)
     textdf<-data.frame(x1 = x1,
                        y1 = y1,
                        label = lbs)
     
   }
+
+  
+  
+# semi circle or full circle
+# need to rotate i
+  if(shape=="semi-circle"){
+  df$x1<-df$x1/2
+  df$x2<-df$x2/2 
+  textdf$x1<-textdf$x1/2
+  }
+
 
   # plot
 p <- ggplot(df, aes(x1, y1)) +
@@ -129,37 +224,33 @@ p <- ggplot(df, aes(x1, y1)) +
                 upright = TRUE) +
   scale_y_continuous(limits = c(-5, 10)) +
   scale_x_continuous(limits = c(0, 2*pi)) +
-  scale_fill_manual(values = c("deepskyblue3", "deepskyblue4",
-                               "green3", "green4","tomato", "tomato2")) +
+  #scale_fill_manual(values = c("deepskyblue3", "deepskyblue4",
+  #                             "green3", "green4","tomato", "tomato2")) +
   scale_alpha_identity() +
   theme_void() +
   theme(legend.position = "none") 
 
-p
-p + coord_polar()
+plotout<-p + coord_polar()
+return(plotout)
 }
 
 
-
-# testing
-text11<-c("a", "s", "e", "r", "y", "g", "p","i", "ew", "qq", "ii")
-text10<-c("a", "s", "e", "r", "y", "g", "p", "i", "ew", "qq")
-text9<-c("a", "s", "e", "r", "y", "g", "p", "i", "ew")
-
-df<-createdonuts(2, 6, 4, 3)
-polarplotter(df,text10)
+#####
+df<-createdf(2, c(6, 5))
+polarplotter(df, shape="semi-circle", letters[1:11])
 
 
-df<-createdonuts(2, 6, 3, 3)
-polarplotter(df, text9)
+df<-createdf(3, 3, 5, 6)
+polarplotter(df, shape="semi-circle", letters[1:14])
 
 
-df<-createdonuts(2, 6, 5, 3)
-polarplotter(df, text11)
+df<-createdf(3, 5, 5, 5)
+polarplotter(df, shape="circle", letters[1:15])
 
 
-df<-createdonuts(2, 3, 6, 3)
-polarplotter(df,text9)
+df<-createdf(3, 6, 6, 6)
+polarplotter(df, shape="circle", paste0(letters[1:18]))
 
-
+# it doesn't work with non-unique names for the cats
+# text is breaking at the higher number of cats
 
