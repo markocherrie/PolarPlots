@@ -130,11 +130,11 @@ polarplotter<-function(df, shape, ...){
   #labels
   #print(labels)
   
+  # make the text in the middle
   i<-300
   while(i %% nrow(df) != 0 ){
     i = i+1
   }
-  
   
   # get the right labels for the right donut
   lbs<-rep(c(labels), each = round(i/nrow(df)))
@@ -192,24 +192,25 @@ polarplotter<-function(df, shape, ...){
     
     
   }else{
-    x1<-seq(0, 2 * pi, length = 308)
-    y1 = rep(2, 308)
+    x1<-seq(0, 2 * pi, length = i)
+    y1 = rep(2, i)
     textdf<-data.frame(x1 = x1,
                        y1 = y1,
                        label = lbs)
     
   }
 
-  
-  
-# semi circle or full circle
-# need to rotate i
+# for semi-circle
   if(shape=="semi-circle"){
-  df$x1<-df$x1/2
-  df$x2<-df$x2/2 
-  textdf$x1<-textdf$x1/2
+    df$x1<-df$x1/2
+    df$x2<-df$x2/2 
+    textdf$x1<-textdf$x1/2
+    
+    startval=-(pi / 2)
+  } else{
+    startval=0
   }
-
+  
 
   # plot
 p <- ggplot(df, aes(x1, y1)) +
@@ -223,32 +224,40 @@ p <- ggplot(df, aes(x1, y1)) +
                 color = "white",
                 upright = TRUE) +
   scale_y_continuous(limits = c(-5, 10)) +
-  scale_x_continuous(limits = c(0, 2*pi)) +
+  scale_x_continuous(limits = c(0, pi*2)) +
   #scale_fill_manual(values = c("deepskyblue3", "deepskyblue4",
   #                             "green3", "green4","tomato", "tomato2")) +
   scale_alpha_identity() +
   theme_void() +
   theme(legend.position = "none") 
 
-plotout<-p + coord_polar()
-return(plotout)
+# semi-circle shape
+
+  plotout<- p + coord_polar(start = startval)
+  return(plotout)
+
+
 }
 
 
 #####
+df<-createdf(1, c(4))
+polarplotter(df, shape="semi-circle", letters[1:4])
+
+
 df<-createdf(2, c(6, 5))
 polarplotter(df, shape="semi-circle", letters[1:11])
 
 
-df<-createdf(3, 3, 5, 6)
-polarplotter(df, shape="semi-circle", letters[1:14])
+df<-createdf(3, c(3, 5, 6))
+polarplotter(df, shape="circle", letters[1:14])
 
 
-df<-createdf(3, 5, 5, 5)
+df<-createdf(3, c(5, 5, 5))
 polarplotter(df, shape="circle", letters[1:15])
 
 
-df<-createdf(3, 6, 6, 6)
+df<-createdf(3, c(6, 6, 6))
 polarplotter(df, shape="circle", paste0(letters[1:18]))
 
 # it doesn't work with non-unique names for the cats
