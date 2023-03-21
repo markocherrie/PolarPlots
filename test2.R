@@ -3,61 +3,36 @@ library(ggplot2)
 library(geomtextpath)
 library(RColorBrewer)
 library(car)
+library(plyr)
 
 # create the  dataframe
 createdonuts<-function(numberofbands, ...){
   
   numberofcatsband <- unlist(list(...))
   
-  numberofcatsband2 <- car::recode(numberofcatsband, '1=6; 2=3; 3=2; 4=1.5; 5=1.2; 6=1')
+  xx1 <- car::recode(numberofcatsband, '1=6; 2=3; 3=2; 4=1.5; 5=1.2; 6=1')
+  xx2 <- numberofcatsband
   
+  yy1 <- seq(1, 200, by = 2)[1:numberofbands]
+  yy2 <- seq(3, 200, by = 2)[1:numberofbands]
 
-# make the bands
-if(numberofbands==1){
-  NCB1=numberofcatsband2[1]
+  argss<-data.frame(xx1=xx1, xx2=xx2, yy1=yy1, yy2=yy2)
   
+  makethecoords<-function(xx1, xx2, yy1, yy2){
+    
+    x1<- c(seq(0, 10/6 * pi, xx1*pi/3))
+    y1<- c(rep(yy1, xx2))
+    x2<- c(seq(0, 10/6 * pi, xx1*pi/3) + xx1*pi/3)
+    y2<- c(rep(yy2, xx2))
   
-  x1<- c(seq(0, 10/6 * pi, NCB1*pi/3))
-  y1<- c(rep(1, numberofcatsband[1]))
-  x2<- c(seq(0, 10/6 * pi, NCB1*pi/3) + NCB1*pi/3)
-  y2<- c(rep(3, numberofcatsband[1]))
+    # return the dataframe
+    df<-data.frame(x1,x2,y1,y2)
+    return(df)
+  }
   
+  df <-plyr::mdply(argss, makethecoords)
+  df <- df[order(df$y1),]
   
-}else if(numberofbands==2){
-  NCB1=numberofcatsband2[1]
-  NCB2=numberofcatsband2[2]
-  
-  x1<- c(seq(0, 10/6 * pi, NCB1*pi/3), 
-         seq(0, 10/6 * pi, NCB2*pi/3))
-  y1<- c(rep(1, numberofcatsband[1]), 
-         rep(3, numberofcatsband[2]))
-  x2<- c(seq(0, 10/6 * pi, NCB1*pi/3) + NCB1*pi/3, 
-         seq(0, 10/6 * pi, NCB2*pi/3) + NCB2*pi/3)
-  y2<- c(rep(3, numberofcatsband[1]), 
-         rep(5, numberofcatsband[2]))
-  
-}else if(numberofbands==3){
-  NCB1=numberofcatsband2[1]
-  NCB2=numberofcatsband2[2]
-  NCB3=numberofcatsband2[3]
-  
-  
-  x1<- c(seq(0, 10/6 * pi, NCB1*pi/3), seq(0, 10/6 * pi, NCB2*pi/3), seq(0, 10/6 * pi, NCB3*pi/3))
-  y1<- c(rep(1, numberofcatsband[1]), rep(3, numberofcatsband[2]), rep(5, numberofcatsband[3]))
-  x2<- c(seq(0, 10/6 * pi, NCB1*pi/3) + NCB1*pi/3, seq(0, 10/6 * pi, NCB2*pi/3) + NCB2*pi/3, seq(0, 10/6 * pi, NCB3*pi/3) + NCB3*pi/3)
-  y2<- c(rep(3, numberofcatsband[1]), rep(5, numberofcatsband[2]), rep(7, numberofcatsband[3]))
-  
-}
-  
-
-  # group and alpha - for colours 
-  # add labels here too
-  n <- length(x1)
-  group<-letters[c(1:n)]
-  alpha<-0.9
-
-  df<-data.frame(x1,x2,y1,y2, group, alpha)
-  df
 }
 
 # polar plotter
@@ -77,7 +52,7 @@ donutplot<-function(df, shape, ...){
   # get the right labels for the right donut
   lbs<-rep(c(labels), each = round(i/nrow(df)))
   
-  # get
+  # NEED TO REFACTOR THIS>>>>
   if(length(unique(df$y1))==2){
     
   y1a<-rep(2, length(lbs[lbs %in% labels[1:table(df$y1)[1]]]))
@@ -119,8 +94,6 @@ donutplot<-function(df, shape, ...){
         (table(df$y1)[1]+table(df$y1)[2]+1):
           (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3])
       ]]))
-    
-    
     x1c<-seq(0,2 * pi, length = length(y1c))
     
     
@@ -131,7 +104,200 @@ donutplot<-function(df, shape, ...){
                        label = lbs)
     
     
-  }else{
+  }else if(length(unique(df$y1))==4){
+    
+  
+    y1a<-rep(2, length(lbs[lbs %in% labels[1:table(df$y1)[1]]]))
+    x1a<-seq(0,2 * pi, length = length(y1a))
+    
+    y1b<-rep(4, length(lbs[
+      lbs %in% labels[
+        (table(df$y1)[1]+1):
+          (table(df$y1)[1]+table(df$y1)[2])
+      ]]))
+    x1b<-seq(0,2 * pi, length = length(y1b))
+    
+    
+    y1c<-rep(6, length(lbs[
+      lbs %in% labels[
+        (table(df$y1)[1]+table(df$y1)[2]+1):
+          (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3])
+      ]]))
+    x1c<-seq(0,2 * pi, length = length(y1c))
+    
+    y1d<-rep(8, length(lbs[
+      lbs %in% labels[
+        (table(df$y1)[1]+table(df$y1)[2]+ table(df$y1)[3]+1):
+          (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3]+ table(df$y1)[4])
+      ]]))
+    x1d<-seq(0,2 * pi, length = length(y1d))
+    
+  
+    x1<-c(x1a, x1b, x1c, x1d)
+    y1<-c(y1a,y1b, y1c, y1d)
+    textdf<-data.frame(x1 = x1,
+                       y1 = y1,
+                       label = lbs)
+    
+    
+  
+    
+    }else if(length(unique(df$y1))==5){
+      
+      y1a<-rep(2, length(lbs[lbs %in% labels[1:table(df$y1)[1]]]))
+      x1a<-seq(0,2 * pi, length = length(y1a))
+      
+      y1b<-rep(4, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+1):
+            (table(df$y1)[1]+table(df$y1)[2])
+        ]]))
+      x1b<-seq(0,2 * pi, length = length(y1b))
+      
+      
+      y1c<-rep(6, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+table(df$y1)[2]+1):
+            (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3])
+        ]]))
+      x1c<-seq(0,2 * pi, length = length(y1c))
+      
+      y1d<-rep(8, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+table(df$y1)[2]+ table(df$y1)[3]+1):
+            (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3]+ table(df$y1)[4])
+        ]]))
+      x1d<-seq(0,2 * pi, length = length(y1d))
+      
+      
+      y1e<-rep(10, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+table(df$y1)[2]+ table(df$y1)[3]+ table(df$y1)[4]+1):
+            (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3]+ table(df$y1)[4]+ table(df$y1)[5])
+        ]]))
+      x1e<-seq(0,2 * pi, length = length(y1e))
+      
+      x1<-c(x1a, x1b, x1c, x1d, x1e)
+      y1<-c(y1a,y1b, y1c, y1d, y1e)
+      textdf<-data.frame(x1 = x1,
+                         y1 = y1,
+                         label = lbs)
+      
+      
+    }else if(length(unique(df$y1))==6){
+      
+      
+      y1a<-rep(2, length(lbs[lbs %in% labels[1:table(df$y1)[1]]]))
+      x1a<-seq(0,2 * pi, length = length(y1a))
+      
+      y1b<-rep(4, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+1):
+            (table(df$y1)[1]+table(df$y1)[2])
+        ]]))
+      x1b<-seq(0,2 * pi, length = length(y1b))
+      
+      
+      y1c<-rep(6, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+table(df$y1)[2]+1):
+            (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3])
+        ]]))
+      x1c<-seq(0,2 * pi, length = length(y1c))
+      
+      y1d<-rep(8, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+table(df$y1)[2]+ table(df$y1)[3]+1):
+            (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3]+ table(df$y1)[4])
+        ]]))
+      x1d<-seq(0,2 * pi, length = length(y1d))
+      
+      
+      y1e<-rep(10, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+table(df$y1)[2]+ table(df$y1)[3]+ table(df$y1)[4]+1):
+            (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3]+ table(df$y1)[4]+ table(df$y1)[5])
+        ]]))
+      x1e<-seq(0,2 * pi, length = length(y1e))
+      
+      
+      y1f<-rep(12, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+table(df$y1)[2]+ table(df$y1)[3]+ table(df$y1)[4]+ table(df$y1)[5]+1):
+            (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3]+ table(df$y1)[4]+ table(df$y1)[5]+ table(df$y1)[6])
+        ]]))
+      x1f<-seq(0,2 * pi, length = length(y1f))
+      
+      
+      x1<-c(x1a, x1b, x1c, x1d, x1e, x1f)
+      y1<-c(y1a,y1b, y1c, y1d, y1e, y1f)
+      textdf<-data.frame(x1 = x1,
+                         y1 = y1,
+                         label = lbs)
+      
+      
+      
+    }else if(length(unique(df$y1))==7){
+        
+      y1a<-rep(2, length(lbs[lbs %in% labels[1:table(df$y1)[1]]]))
+      x1a<-seq(0,2 * pi, length = length(y1a))
+      
+      y1b<-rep(4, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+1):
+            (table(df$y1)[1]+table(df$y1)[2])
+        ]]))
+      x1b<-seq(0,2 * pi, length = length(y1b))
+      
+      
+      y1c<-rep(6, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+table(df$y1)[2]+1):
+            (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3])
+        ]]))
+      x1c<-seq(0,2 * pi, length = length(y1c))
+      
+      y1d<-rep(8, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+table(df$y1)[2]+ table(df$y1)[3]+1):
+            (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3]+ table(df$y1)[4])
+        ]]))
+      x1d<-seq(0,2 * pi, length = length(y1d))
+      
+      
+      y1e<-rep(10, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+table(df$y1)[2]+ table(df$y1)[3]+ table(df$y1)[4]+1):
+            (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3]+ table(df$y1)[4]+ table(df$y1)[5])
+        ]]))
+      x1e<-seq(0,2 * pi, length = length(y1e))
+      
+      
+      y1f<-rep(12, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+table(df$y1)[2]+ table(df$y1)[3]+ table(df$y1)[4]+ table(df$y1)[5]+1):
+            (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3]+ table(df$y1)[4]+ table(df$y1)[5]+ table(df$y1)[6])
+        ]]))
+      x1f<-seq(0,2 * pi, length = length(y1f))
+      
+      
+      
+      y1g<-rep(14, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+table(df$y1)[2]+ table(df$y1)[3]+ table(df$y1)[4]+ table(df$y1)[5]+ table(df$y1)[6]+1):
+            (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3]+ table(df$y1)[4]+ table(df$y1)[5]+ table(df$y1)[6] + table(df$y1)[7])
+        ]]))
+      x1g<-seq(0,2 * pi, length = length(y1g))
+      
+      
+      x1<-c(x1a, x1b, x1c, x1d, x1e, x1f, x1g)
+      y1<-c(y1a,y1b, y1c, y1d, y1e, y1f, y1g)
+      textdf<-data.frame(x1 = x1,
+                         y1 = y1,
+                         label = lbs)
+      
+        
+      }else{
     x1<-seq(0, 2 * pi, length = i)
     y1 = rep(2, i)
     textdf<-data.frame(x1 = x1,
@@ -151,6 +317,11 @@ donutplot<-function(df, shape, ...){
     startval=0
   }
   
+  # aesthetics
+  n <- length(df$x1)
+  df$group<-letters[c(1:n)]
+  df$alpha<-0.9
+  
 
   # plot
 p <- ggplot(df, aes(x1, y1)) +
@@ -163,7 +334,7 @@ p <- ggplot(df, aes(x1, y1)) +
                 size = 4.6, 
                 color = "white",
                 upright = TRUE) +
-  scale_y_continuous(limits = c(-5, 10)) +
+  scale_y_continuous(limits = c(-5, 20)) +
   scale_x_continuous(limits = c(0, pi*2)) +
   #scale_fill_manual(values = c("deepskyblue3", "deepskyblue4",
   #                             "green3", "green4","tomato", "tomato2")) +
@@ -184,6 +355,11 @@ p <- ggplot(df, aes(x1, y1)) +
 
 
 #####
+df<-createdonuts(7, c(6,6,6,5,1,1,1))
+donutplot(df, shape="semi-circle", c(1:26))
+
+
+
 df<-createdonuts(1, c(1))
 donutplot(df, shape="semi-circle", letters[1:1])
 
