@@ -13,7 +13,9 @@ createdf<-function(numberofbands, ...){
 # make the bands
 if(numberofbands==1){
   
-  if(numberofcatsband[1]==2){
+  if(numberofcatsband[1]==1){
+    NCB1=6
+  }else if(numberofcatsband[1]==2){
     NCB1=3
   }else if(numberofcatsband[1]==3){
     NCB1=2
@@ -34,7 +36,9 @@ if(numberofbands==1){
 }else if(numberofbands==2){
   
   
-  if(numberofcatsband[1]==2){
+  if(numberofcatsband[1]==1){
+    NCB1=6
+  }else if(numberofcatsband[1]==2){
     NCB1=3
   }else if(numberofcatsband[1]==3){
     NCB1=2
@@ -47,7 +51,9 @@ if(numberofbands==1){
   }
   
   
-  if(numberofcatsband[2]==2){
+  if(numberofcatsband[2]==1){
+    NCB2=6
+  }else if(numberofcatsband[2]==2){
     NCB2=3
   }else if(numberofcatsband[2]==3){
     NCB2=2
@@ -67,7 +73,9 @@ if(numberofbands==1){
 }else if(numberofbands==3){
   
   
-  if(numberofcatsband[1]==2){
+  if(numberofcatsband[1]==1){
+    NCB1=6
+  }else if(numberofcatsband[1]==2){
     NCB1=3
   }else if(numberofcatsband[1]==3){
     NCB1=2
@@ -80,7 +88,9 @@ if(numberofbands==1){
   }
   
   
-  if(numberofcatsband[2]==2){
+  if(numberofcatsband[2]==1){
+    NCB2=6
+  }else if(numberofcatsband[2]==2){
     NCB2=3
   }else if(numberofcatsband[2]==3){
     NCB2=2
@@ -93,7 +103,9 @@ if(numberofbands==1){
   }
   
   
-  if(numberofcatsband[3]==2){
+  if(numberofcatsband[3]==1){
+    NCB3=6
+  }else if(numberofcatsband[3]==2){
     NCB3=3
   } else if(numberofcatsband[3]==3){
     NCB3=2
@@ -241,8 +253,8 @@ p <- ggplot(df, aes(x1, y1)) +
 
 
 #####
-df<-createdf(1, c(4))
-polarplotter(df, shape="semi-circle", letters[1:4])
+df<-createdf(1, c(1))
+polarplotter(df, shape="semi-circle", letters[1:1])
 
 
 df<-createdf(2, c(6, 5))
@@ -257,9 +269,20 @@ df<-createdf(3, c(5, 5, 5))
 polarplotter(df, shape="circle", letters[1:15])
 
 
-df<-createdf(3, c(6, 6, 6))
-polarplotter(df, shape="circle", paste0(letters[1:18]))
+df<-createdf(3, c(1, 1, 1))
+polarplotter(df, shape="semi-circle", paste0("you?", "are", "How"))
 
 # it doesn't work with non-unique names for the cats
-# text is breaking at the higher number of cats
+
+# rainbow - 7
+
+# DEFRA
+labelsDEFRA<-c("Homeless", "Pregnant", "Physical Activity",
+                "Occupation", "Location",
+               "Socioeconomic Deprivation",
+               "COVID-19", "Recession/Austerity", "Climate Crisis")
+
+df<-createdf(3, c(3, 3,1, 3))
+polarplotter(df, shape="semi-circle", labelsDEFRA)
+
 
