@@ -36,7 +36,7 @@ createdonuts<-function(numberofbands, ...){
 }
 
 # polar plotter
-donutplot<-function(df, shape, ...){
+donutplot<-function(df, shape, colourpal, ...){
 
   # get the labels
   labels <- unlist(list(...))
@@ -295,6 +295,73 @@ donutplot<-function(df, shape, ...){
       textdf<-data.frame(x1 = x1,
                          y1 = y1,
                          label = lbs)
+    }else if(length(unique(df$y1))==8){
+      
+      y1a<-rep(2, length(lbs[lbs %in% labels[1:table(df$y1)[1]]]))
+      x1a<-seq(0,2 * pi, length = length(y1a))
+      
+      y1b<-rep(4, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+1):
+            (table(df$y1)[1]+table(df$y1)[2])
+        ]]))
+      x1b<-seq(0,2 * pi, length = length(y1b))
+      
+      
+      y1c<-rep(6, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+table(df$y1)[2]+1):
+            (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3])
+        ]]))
+      x1c<-seq(0,2 * pi, length = length(y1c))
+      
+      y1d<-rep(8, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+table(df$y1)[2]+ table(df$y1)[3]+1):
+            (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3]+ table(df$y1)[4])
+        ]]))
+      x1d<-seq(0,2 * pi, length = length(y1d))
+      
+      
+      y1e<-rep(10, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+table(df$y1)[2]+ table(df$y1)[3]+ table(df$y1)[4]+1):
+            (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3]+ table(df$y1)[4]+ table(df$y1)[5])
+        ]]))
+      x1e<-seq(0,2 * pi, length = length(y1e))
+      
+      
+      y1f<-rep(12, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+table(df$y1)[2]+ table(df$y1)[3]+ table(df$y1)[4]+ table(df$y1)[5]+1):
+            (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3]+ table(df$y1)[4]+ table(df$y1)[5]+ table(df$y1)[6])
+        ]]))
+      x1f<-seq(0,2 * pi, length = length(y1f))
+      
+      
+      
+      y1g<-rep(14, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+table(df$y1)[2]+ table(df$y1)[3]+ table(df$y1)[4]+ table(df$y1)[5]+ table(df$y1)[6]+1):
+            (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3]+ table(df$y1)[4]+ table(df$y1)[5]+ table(df$y1)[6] + table(df$y1)[7])
+        ]]))
+      x1g<-seq(0,2 * pi, length = length(y1g))
+      
+      
+      y1h<-rep(16, length(lbs[
+        lbs %in% labels[
+          (table(df$y1)[1]+table(df$y1)[2]+ table(df$y1)[3]+ table(df$y1)[4]+ table(df$y1)[5]+ table(df$y1)[6]+table(df$y1)[7]+1):
+            (table(df$y1)[1]+table(df$y1)[2]+table(df$y1)[3]+ table(df$y1)[4]+ table(df$y1)[5]+ table(df$y1)[6] + table(df$y1)[7]+ table(df$y1)[8])
+        ]]))
+      x1h<-seq(0,2 * pi, length = length(y1h))
+      
+      
+      
+      x1<-c(x1a, x1b, x1c, x1d, x1e, x1f, x1g, x1h)
+      y1<-c(y1a,y1b, y1c, y1d, y1e, y1f, y1g, y1h)
+      textdf<-data.frame(x1 = x1,
+                         y1 = y1,
+                         label = lbs)
       
         
       }else{
@@ -322,7 +389,7 @@ donutplot<-function(df, shape, ...){
   df$group<-letters[c(1:n)]
   df$alpha<-0.9
   
-
+ 
   # plot
 p <- ggplot(df, aes(x1, y1)) +
   geom_rect(aes(xmin = x1, xmax = x2, ymin = y1, ymax = y2, fill = group,
@@ -334,7 +401,7 @@ p <- ggplot(df, aes(x1, y1)) +
                 size = 4.6, 
                 color = "white",
                 upright = TRUE) +
-  scale_y_continuous(limits = c(-5, 20)) +
+  scale_y_continuous(limits = c(-5, max(df$y2+1))) +
   scale_x_continuous(limits = c(0, pi*2)) +
   #scale_fill_manual(values = c("deepskyblue3", "deepskyblue4",
   #                             "green3", "green4","tomato", "tomato2")) +
@@ -346,6 +413,17 @@ p <- ggplot(df, aes(x1, y1)) +
 
   plotout<- p + coord_polar(start = startval)
   
+  
+  if(colourpal=="GilbertBaker1978"){
+    
+    rainbow<- c("#8e008e" ,"#400098", "#00c0c0", "#008e00","#ffff00", "#ff8e00" ,"#ff0000" ,"#ff69b4")
+    rainbowcols<-rainbow[1:length(df$x1)]
+    
+    plotout<-plotout +
+      scale_fill_manual(values=rainbowcols)
+  }
+  
+  
   # add the text here
   
   return(plotout)
@@ -355,29 +433,31 @@ p <- ggplot(df, aes(x1, y1)) +
 
 
 #####
-df<-createdonuts(7, c(6,6,6,5,1,1,1))
-donutplot(df, shape="semi-circle", c(1:26))
+df<-createdonuts(8, c(1,1,1,1,1,1,1,1))
+donutplot(df, shape="semi-circle",colourpal="GilbertBaker1978", 
+          c("Sprit", "Serenity", "Magic", "Nature", "Sunlight", "Healing",
+            "Life", "Sex"))
 
 
 
 df<-createdonuts(1, c(1))
-donutplot(df, shape="semi-circle", letters[1:1])
+donutplot(df, shape="semi-circle", colourpal="", letters[1:1])
 
 
 df<-createdonuts(2, c(6, 5))
-donutplot(df, shape="semi-circle", letters[1:11])
+donutplot(df, shape="semi-circle", colourpal="",letters[1:11])
 
 
 df<-createdonuts(3, c(3, 5, 6))
-donutplot(df, shape="circle", letters[1:14])
+donutplot(df, shape="circle", colourpal="",letters[1:14])
 
 
 df<-createdonuts(3, c(6, 6, 6))
-donutplot(df, shape="circle", letters[1:18])
+donutplot(df, shape="circle", colourpal="",letters[1:18])
 
 
 # 
-donutplot(createdonuts(3, c(1, 1, 1)), shape="semi-circle", c(" ", "  ", "   "))
+donutplot(createdonuts(3, c(1, 1, 1)), colourpal="",shape="semi-circle", c(" ", "  ", "   "))
 
 # it doesn't work with non-unique names for the cats
 
@@ -390,8 +470,8 @@ labelsWDH<-c("Individual 'lifestyle' factors",
               "Living and Working Conditions",
               "General Socioeconomic, cultural and environmental conditions")
 
-df<-createdf(3, c(1, 1, 1))
-polarplotter(df, shape="semi-circle", labelsWDH)
+df<-createdonuts(3, c(1, 1, 1))
+donutplot(df, shape="semi-circle", colourpal="",labelsWDH)
 
 
 ### DEFRA
@@ -399,8 +479,8 @@ labelsDEFRA<-c("Preg.", "Home", "Exercise", "Religion", "Job",
              "Socioeconomic deprivation", "Dense Urban Area",
              "COVID-19")
 
-df<-createdf(3, c(5,2,1))
-polarplotter(df, shape="semi-circle", labelsDEFRA)
+df<-createdonuts(3, c(5,2,1))
+donutplot(df, shape="semi-circle",colourpal="", labelsDEFRA)
 
 
 ### DEFRA
@@ -408,8 +488,8 @@ labelsTARGET<-c("Outdoor Act. - 2h/week","Job outdoors - 12h/week",
                "Living in most deprived LSOA", "Living in London",
                "Post COVID-19")
 
-df<-createdf(3, c(2,2,1))
-polarplotter(df, shape="semi-circle", labelsTARGET)
+df<-createdonuts(3, c(2,2,1))
+donutplot(df, shape="semi-circle", colourpal="",labelsTARGET)
 
 
 
