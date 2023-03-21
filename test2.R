@@ -1,129 +1,55 @@
+# load the libraries
 library(ggplot2)
 library(geomtextpath)
 library(RColorBrewer)
-
+library(car)
 
 # create the  dataframe
-createdf<-function(numberofbands, ...){
+createdonuts<-function(numberofbands, ...){
   
   numberofcatsband <- unlist(list(...))
   
-
+  numberofcatsband2 <- car::recode(numberofcatsband, '1=6; 2=3; 3=2; 4=1.5; 5=1.2; 6=1')
+  
 
 # make the bands
 if(numberofbands==1){
-  
-  if(numberofcatsband[1]==1){
-    NCB1=6
-  }else if(numberofcatsband[1]==2){
-    NCB1=3
-  }else if(numberofcatsband[1]==3){
-    NCB1=2
-  }else if(numberofcatsband[1]==4){
-    NCB1=1.5
-  } else if(numberofcatsband[1]==5){
-    NCB1=1.2
-  } else if(numberofcatsband[1]==6){
-    NCB1=1
-  }
+  NCB1=numberofcatsband2[1]
   
   
   x1<- c(seq(0, 10/6 * pi, NCB1*pi/3))
   y1<- c(rep(1, numberofcatsband[1]))
   x2<- c(seq(0, 10/6 * pi, NCB1*pi/3) + NCB1*pi/3)
   y2<- c(rep(3, numberofcatsband[1]))
-
+  
+  
 }else if(numberofbands==2){
+  NCB1=numberofcatsband2[1]
+  NCB2=numberofcatsband2[2]
   
-  
-  if(numberofcatsband[1]==1){
-    NCB1=6
-  }else if(numberofcatsband[1]==2){
-    NCB1=3
-  }else if(numberofcatsband[1]==3){
-    NCB1=2
-  }else if(numberofcatsband[1]==4){
-    NCB1=1.5
-  } else if(numberofcatsband[1]==5){
-    NCB1=1.2
-  } else if(numberofcatsband[1]==6){
-    NCB1=1
-  }
-  
-  
-  if(numberofcatsband[2]==1){
-    NCB2=6
-  }else if(numberofcatsband[2]==2){
-    NCB2=3
-  }else if(numberofcatsband[2]==3){
-    NCB2=2
-  } else if(numberofcatsband[2]==4){
-    NCB2=1.5
-  } else if(numberofcatsband[2]==5){
-    NCB2=1.2
-  } else if(numberofcatsband[2]==6){
-    NCB2=1
-  }
-  
-  x1<- c(seq(0, 10/6 * pi, NCB1*pi/3), seq(0, 10/6 * pi, NCB2*pi/3))
-  y1<- c(rep(1, numberofcatsband[1]), rep(3, numberofcatsband[2]))
-  x2<- c(seq(0, 10/6 * pi, NCB1*pi/3) + NCB1*pi/3, seq(0, 10/6 * pi, NCB2*pi/3) + NCB2*pi/3)
-  y2<- c(rep(3, numberofcatsband[1]), rep(5, numberofcatsband[2]))
+  x1<- c(seq(0, 10/6 * pi, NCB1*pi/3), 
+         seq(0, 10/6 * pi, NCB2*pi/3))
+  y1<- c(rep(1, numberofcatsband[1]), 
+         rep(3, numberofcatsband[2]))
+  x2<- c(seq(0, 10/6 * pi, NCB1*pi/3) + NCB1*pi/3, 
+         seq(0, 10/6 * pi, NCB2*pi/3) + NCB2*pi/3)
+  y2<- c(rep(3, numberofcatsband[1]), 
+         rep(5, numberofcatsband[2]))
   
 }else if(numberofbands==3){
+  NCB1=numberofcatsband2[1]
+  NCB2=numberofcatsband2[2]
+  NCB3=numberofcatsband2[3]
   
-  
-  if(numberofcatsband[1]==1){
-    NCB1=6
-  }else if(numberofcatsband[1]==2){
-    NCB1=3
-  }else if(numberofcatsband[1]==3){
-    NCB1=2
-  }else if(numberofcatsband[1]==4){
-    NCB1=1.5
-  } else if(numberofcatsband[1]==5){
-    NCB1=1.2
-  } else if(numberofcatsband[1]==6){
-    NCB1=1
-  }
-  
-  
-  if(numberofcatsband[2]==1){
-    NCB2=6
-  }else if(numberofcatsband[2]==2){
-    NCB2=3
-  }else if(numberofcatsband[2]==3){
-    NCB2=2
-  } else if(numberofcatsband[2]==4){
-    NCB2=1.5
-  } else if(numberofcatsband[2]==5){
-    NCB2=1.2
-  } else if(numberofcatsband[2]==6){
-    NCB2=1
-  }
-  
-  
-  if(numberofcatsband[3]==1){
-    NCB3=6
-  }else if(numberofcatsband[3]==2){
-    NCB3=3
-  } else if(numberofcatsband[3]==3){
-    NCB3=2
-  } else if(numberofcatsband[3]==4){
-    NCB3=1.5
-  } else if(numberofcatsband[3]==5){
-    NCB3=1.2
-  } else if(numberofcatsband[3]==6){
-    NCB3=1
-  }
   
   x1<- c(seq(0, 10/6 * pi, NCB1*pi/3), seq(0, 10/6 * pi, NCB2*pi/3), seq(0, 10/6 * pi, NCB3*pi/3))
   y1<- c(rep(1, numberofcatsband[1]), rep(3, numberofcatsband[2]), rep(5, numberofcatsband[3]))
   x2<- c(seq(0, 10/6 * pi, NCB1*pi/3) + NCB1*pi/3, seq(0, 10/6 * pi, NCB2*pi/3) + NCB2*pi/3, seq(0, 10/6 * pi, NCB3*pi/3) + NCB3*pi/3)
   y2<- c(rep(3, numberofcatsband[1]), rep(5, numberofcatsband[2]), rep(7, numberofcatsband[3]))
-
+  
 }
   
+
   # group and alpha - for colours 
   # add labels here too
   n <- length(x1)
@@ -135,7 +61,7 @@ if(numberofbands==1){
 }
 
 # polar plotter
-polarplotter<-function(df, shape, ...){
+donutplot<-function(df, shape, ...){
 
   # get the labels
   labels <- unlist(list(...))
@@ -170,6 +96,8 @@ polarplotter<-function(df, shape, ...){
   textdf<-data.frame(x1 = x1,
              y1 = y1,
              label = lbs)
+  
+  
   }else if(length(unique(df$y1))==3){
     
     y1a<-rep(2, length(lbs[lbs %in% labels[1:table(df$y1)[1]]]))
@@ -246,6 +174,9 @@ p <- ggplot(df, aes(x1, y1)) +
 # semi-circle shape
 
   plotout<- p + coord_polar(start = startval)
+  
+  # add the text here
+  
   return(plotout)
 
 
@@ -253,36 +184,56 @@ p <- ggplot(df, aes(x1, y1)) +
 
 
 #####
-df<-createdf(1, c(1))
-polarplotter(df, shape="semi-circle", letters[1:1])
+df<-createdonuts(1, c(1))
+donutplot(df, shape="semi-circle", letters[1:1])
 
 
-df<-createdf(2, c(6, 5))
-polarplotter(df, shape="semi-circle", letters[1:11])
+df<-createdonuts(2, c(6, 5))
+donutplot(df, shape="semi-circle", letters[1:11])
 
 
-df<-createdf(3, c(3, 5, 6))
-polarplotter(df, shape="circle", letters[1:14])
+df<-createdonuts(3, c(3, 5, 6))
+donutplot(df, shape="circle", letters[1:14])
 
 
-df<-createdf(3, c(5, 5, 5))
-polarplotter(df, shape="circle", letters[1:15])
+df<-createdonuts(3, c(6, 6, 6))
+donutplot(df, shape="circle", letters[1:18])
 
 
-df<-createdf(3, c(1, 1, 1))
-polarplotter(df, shape="semi-circle", paste0("you?", "are", "How"))
+# 
+donutplot(createdonuts(3, c(1, 1, 1)), shape="semi-circle", c(" ", "  ", "   "))
 
 # it doesn't work with non-unique names for the cats
 
 # rainbow - 7
 
-# DEFRA
-labelsDEFRA<-c("Homeless", "Pregnant", "Physical Activity",
-                "Occupation", "Location",
-               "Socioeconomic Deprivation",
-               "COVID-19", "Recession/Austerity", "Climate Crisis")
 
-df<-createdf(3, c(3, 3,1, 3))
+### wider determinants of health
+# missing social and community networks
+labelsWDH<-c("Individual 'lifestyle' factors",
+              "Living and Working Conditions",
+              "General Socioeconomic, cultural and environmental conditions")
+
+df<-createdf(3, c(1, 1, 1))
+polarplotter(df, shape="semi-circle", labelsWDH)
+
+
+### DEFRA
+labelsDEFRA<-c("Preg.", "Home", "Exercise", "Religion", "Job",
+             "Socioeconomic deprivation", "Dense Urban Area",
+             "COVID-19")
+
+df<-createdf(3, c(5,2,1))
 polarplotter(df, shape="semi-circle", labelsDEFRA)
+
+
+### DEFRA
+labelsTARGET<-c("Outdoor Act. - 2h/week","Job outdoors - 12h/week",
+               "Living in most deprived LSOA", "Living in London",
+               "Post COVID-19")
+
+df<-createdf(3, c(2,2,1))
+polarplotter(df, shape="semi-circle", labelsTARGET)
+
 
 
