@@ -402,7 +402,7 @@ donutplot<-function(df, shape, colourby="individual", colourpal, alpha=0.9, labe
   
   
   if(colourby=="individual"){
-  df$group<-labels
+  df$group<-letters[1:nrow(df)]
   }else if(colourby=="band"){
   df$group<-df$y1
   }
@@ -480,26 +480,35 @@ donutplot(df, shape="circle", colourpal="",labels=letters[1:24])
 
 ### wider determinants of health
 # missing social and community networks
-labelsWDH<-c("Individual 'lifestyle' factors",
+labelsWDH<-c("Time-Activity behaviour",
               "Living and Working Conditions",
-              "General Socioeconomic, cultural and environmental conditions")
+              "Location - General socioeconomic, cultural and environmental factors")
 
 df<-createdonuts(1, 1, 1)
 donutplot(df, shape="semi-circle", colourby="band", colourpal="",labels=labelsWDH,
-          innercircletext = "Susceptibility Factors")
+          innercircletext = "Individual Susceptibility Factors")
 
 
-### DEFRA
+### DEFRA - overall 
 labelsDEFRA<-c("Preg.", "Home", "Exercise", "Religion", "Job",
              "Socioeconomic deprivation", "Dense Urban Area",
              "COVID-19")
 
 df<-createdonuts(5,2,1)
 donutplot(df, shape="semi-circle", colourby="band", colourpal="", labels=labelsDEFRA, 
+          innercircletext = c("Professional or recreational athletes"))
+
+
+### DEFRA - targeted 1
+labelsDEFRA<-c("Preg.", "Home", "Exercise", "Religion", "Job",
+               "Socioeconomic deprivation", "Dense Urban Area")
+
+df<-createdonuts(5,2)
+donutplot(df, shape="semi-circle", colourby="band", colourpal="", labels=labelsDEFRA, 
           innercircletext = c("Age Sex Ethinicity"))
 
 
-### DEFRA
+
 labelsTARGET<-c("Outdoor Act. - 2h/week","Job outdoors - 12h/week",
                "Living in most deprived LSOA", "Living in London",
                "Post COVID-19")
