@@ -445,7 +445,7 @@ p <- ggplot(df, aes(x1, y1)) +
   # Add inner text here
   if(innercircletext!=""){
   
-  plotout <- plotout + annotate("text", x=0, y=-5, label = wrapper(innercircletext, width = 5)) #+ 
+  plotout <- plotout + annotate("text", x=0, y=-5, label = wrapper(innercircletext, width = 5), size = 4.6) #+ 
    #geom_point(aes(x=x, y=y), data=data.frame(x=runif(1), y=runif(1)-7), size=65, shape=1, lwd=2, color="black")
   }
   
@@ -473,51 +473,6 @@ donutplot(df, shape="circle", colourpal="",labels=letters[1:14])
 df<-createdonuts(6, 6, 6, 6)
 donutplot(df, shape="circle", colourpal="",labels=letters[1:24])
 
-
-
-
-
-
-### wider determinants of health
-# missing social and community networks
-labelsWDH<-c("Time-Activity behaviour",
-              "Living and Working Conditions",
-              "Location - General socioeconomic, cultural and environmental factors")
-
-df<-createdonuts(1, 1, 1)
-donutplot(df, shape="semi-circle", colourby="band", colourpal="",labels=labelsWDH,
-          innercircletext = "Individual Susceptibility Factors")
-
-
-### DEFRA - overall 
-labelsDEFRA<-c("Preg.", "Home", "Exercise", "Religion", "Job",
-             "Socioeconomic deprivation", "Dense Urban Area",
-             "COVID-19")
-
-df<-createdonuts(5,2,1)
-donutplot(df, shape="semi-circle", colourby="band", colourpal="", labels=labelsDEFRA, 
-          innercircletext = c("Professional or recreational athletes"))
-
-
-### DEFRA - targeted 1
-labelsDEFRA<-c("Preg.", "Home", "Exercise", "Religion", "Job",
-               "Socioeconomic deprivation", "Dense Urban Area")
-
-df<-createdonuts(5,2)
-donutplot(df, shape="semi-circle", colourby="band", colourpal="", labels=labelsDEFRA, 
-          innercircletext = c("Age Sex Ethinicity"))
-
-
-
-labelsTARGET<-c("Outdoor Act. - 2h/week","Job outdoors - 12h/week",
-               "Living in most deprived LSOA", "Living in London",
-               "Post COVID-19")
-
-df<-createdonuts(2,2,1)
-donutplot(df, shape="semi-circle", 
-              colourby="band", 
-              colourpal="",
-          labels=labelsTARGET)
 
 
 # pride rainbow
