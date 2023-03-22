@@ -1,3 +1,12 @@
+# Issues
+# it doesn't work with non-unique names for the cats
+# the circle in the middle isn't working 
+# text in middle not working for full circle
+
+
+# helper function
+wrapper <- function(x, ...) paste(strwrap(x, ...), collapse = "\n")
+
 # load the libraries
 library(ggplot2)
 library(geomtextpath)
@@ -6,9 +15,11 @@ library(car)
 library(plyr)
 
 # create the  dataframe
-createdonuts<-function(numberofbands, ...){
+createdonuts<-function(...){
   
   numberofcatsband <- unlist(list(...))
+  numberofbands <- length(numberofcatsband)
+  
   
   xx1 <- car::recode(numberofcatsband, '1=6; 2=3; 3=2; 4=1.5; 5=1.2; 6=1')
   xx2 <- numberofcatsband
@@ -36,10 +47,12 @@ createdonuts<-function(numberofbands, ...){
 }
 
 # polar plotter
-donutplot<-function(df, shape, colourpal, ...){
+donutplot<-function(df, shape, colourby="individual", colourpal, alpha=0.9, labels, innercircletext=""){
 
   # get the labels
-  labels <- unlist(list(...))
+  #labels <- unlist(list(...))
+  #labels <- text
+  
   #labels
   #print(labels)
   
@@ -385,9 +398,17 @@ donutplot<-function(df, shape, colourpal, ...){
   }
   
   # aesthetics
-  n <- length(df$x1)
-  df$group<-letters[c(1:n)]
-  df$alpha<-0.9
+  #n <- length(df$x1)
+  
+  
+  if(colourby=="individual"){
+  df$group<-labels
+  }else if(colourby=="band"){
+  df$group<-df$y1
+  }
+  
+  # alpha
+  df$alpha<-alpha
   
  
   # plot
@@ -403,8 +424,6 @@ p <- ggplot(df, aes(x1, y1)) +
                 upright = TRUE) +
   scale_y_continuous(limits = c(-5, max(df$y2+1))) +
   scale_x_continuous(limits = c(0, pi*2)) +
-  #scale_fill_manual(values = c("deepskyblue3", "deepskyblue4",
-  #                             "green3", "green4","tomato", "tomato2")) +
   scale_alpha_identity() +
   theme_void() +
   theme(legend.position = "none") 
@@ -423,8 +442,12 @@ p <- ggplot(df, aes(x1, y1)) +
       scale_fill_manual(values=rainbowcols)
   }
   
+  # Add inner text here
+  if(innercircletext!=""){
   
-  # add the text here
+  plotout <- plotout + annotate("text", x=0, y=-5, label = wrapper(innercircletext, width = 5)) #+ 
+   #geom_point(aes(x=x, y=y), data=data.frame(x=runif(1), y=runif(1)-7), size=65, shape=1, lwd=2, color="black")
+  }
   
   return(plotout)
 
@@ -432,36 +455,27 @@ p <- ggplot(df, aes(x1, y1)) +
 }
 
 
-#####
-df<-createdonuts(8, c(1,1,1,1,1,1,1,1))
-donutplot(df, shape="semi-circle",colourpal="GilbertBaker1978", 
-          c("Sprit", "Serenity", "Magic", "Nature", "Sunlight", "Healing",
-            "Life", "Sex"))
+# examples
+
+df<-createdonuts(1)
+donutplot(df, shape="semi-circle", colourby="individual", colourpal="", alpha=0.5, labels=letters[1:1])
+
+
+df<-createdonuts(5, 5)
+donutplot(df, shape="semi-circle", colourby="band", colourpal="",alpha=c(1,0.5,1,0.5,1,
+                                                        1,0.5,1,0.5,1),labels=letters[1:10])
+
+
+df<-createdonuts(3, 5, 6)
+donutplot(df, shape="circle", colourpal="",labels=letters[1:14])
+
+
+df<-createdonuts(6, 6, 6, 6)
+donutplot(df, shape="circle", colourpal="",labels=letters[1:24])
 
 
 
-df<-createdonuts(1, c(1))
-donutplot(df, shape="semi-circle", colourpal="", letters[1:1])
 
-
-df<-createdonuts(2, c(6, 5))
-donutplot(df, shape="semi-circle", colourpal="",letters[1:11])
-
-
-df<-createdonuts(3, c(3, 5, 6))
-donutplot(df, shape="circle", colourpal="",letters[1:14])
-
-
-df<-createdonuts(3, c(6, 6, 6))
-donutplot(df, shape="circle", colourpal="",letters[1:18])
-
-
-# 
-donutplot(createdonuts(3, c(1, 1, 1)), colourpal="",shape="semi-circle", c(" ", "  ", "   "))
-
-# it doesn't work with non-unique names for the cats
-
-# rainbow - 7
 
 
 ### wider determinants of health
@@ -470,8 +484,9 @@ labelsWDH<-c("Individual 'lifestyle' factors",
               "Living and Working Conditions",
               "General Socioeconomic, cultural and environmental conditions")
 
-df<-createdonuts(3, c(1, 1, 1))
-donutplot(df, shape="semi-circle", colourpal="",labelsWDH)
+df<-createdonuts(1, 1, 1)
+donutplot(df, shape="semi-circle", colourby="band", colourpal="",labels=labelsWDH,
+          innercircletext = "Susceptibility Factors")
 
 
 ### DEFRA
@@ -479,8 +494,9 @@ labelsDEFRA<-c("Preg.", "Home", "Exercise", "Religion", "Job",
              "Socioeconomic deprivation", "Dense Urban Area",
              "COVID-19")
 
-df<-createdonuts(3, c(5,2,1))
-donutplot(df, shape="semi-circle",colourpal="", labelsDEFRA)
+df<-createdonuts(5,2,1)
+donutplot(df, shape="semi-circle", colourby="band", colourpal="", labels=labelsDEFRA, 
+          innercircletext = c("Age Sex Ethinicity"))
 
 
 ### DEFRA
@@ -488,8 +504,18 @@ labelsTARGET<-c("Outdoor Act. - 2h/week","Job outdoors - 12h/week",
                "Living in most deprived LSOA", "Living in London",
                "Post COVID-19")
 
-df<-createdonuts(3, c(2,2,1))
-donutplot(df, shape="semi-circle", colourpal="",labelsTARGET)
+df<-createdonuts(2,2,1)
+donutplot(df, shape="semi-circle", 
+              colourby="band", 
+              colourpal="",
+          labels=labelsTARGET)
+
+
+# pride rainbow
+df<-createdonuts(1,1,1,1,1,1,1,1)
+donutplot(df, shape="semi-circle", colourby="individual", colourpal="GilbertBaker1978", 
+          labels=c("Sprit", "Serenity", "Magic", "Nature", "Sunlight", "Healing",
+            "Life", "Sex"))
 
 
 
